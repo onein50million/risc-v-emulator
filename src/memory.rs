@@ -20,7 +20,6 @@ const SEGMENTS: [Segment; 3] = [
     Segment{segment_type: SegmentTypes::Ram, size: 0xFFFF },
     Segment{segment_type: SegmentTypes::ConnectedDevices, size: MAX_DEVICES*8},
     Segment{segment_type: SegmentTypes::Device, size: MAX_DEVICES*MAX_DEVICE_SIZE},
-
 ];
 
 fn return_segment(address: usize) -> SegmentTypes{
@@ -55,7 +54,7 @@ const SEGMENT_STARTS: [usize; SEGMENTS.len()] = [
     calculate_start(2),
 ];
 
-trait Device{
+pub trait Device{
     fn get_type(&self) -> u64;
     fn get_bytes(&self, address: usize, num_bytes: usize) -> Vec<u8>;
     fn set_bytes(&mut self, address: usize, num_bytes: usize, bytes: Vec<u8>);
@@ -79,7 +78,7 @@ impl Device for Display{
 }
 
 pub struct Memory {
-    ram: Vec<u8>,
+    pub ram: Vec<u8>,
     devices: Vec<Box<dyn Device>>,
 }
 
@@ -132,6 +131,10 @@ impl Memory{
             SegmentTypes::Device => {}
             SegmentTypes::Unknown => {}
         }
+    }
+
+    pub fn set_device(&mut self, index: usize, new_device: Box<dyn Device>){
+        self.devices[index] = new_device;
     }
 
 
