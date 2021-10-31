@@ -1,4 +1,4 @@
-mod format;
-mod opcodes;
-mod processor;
-mod memory;
+pub mod format;
+pub mod opcodes;
+pub mod processor;
+pub mod memory;
