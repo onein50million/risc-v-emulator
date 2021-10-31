@@ -1,0 +1,5 @@
+/target
+/riscv-tests
+*.lock
+*.elf
+*.idea
