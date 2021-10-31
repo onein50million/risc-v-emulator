@@ -12,6 +12,7 @@ fn main() {
     // }
 
     println!("{:?}", processor.get_bytes(0xFF,1000000).len());
+    processor.memory.get_device(1);
 
 
 }

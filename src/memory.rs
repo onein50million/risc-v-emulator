@@ -1,3 +1,4 @@
+use std::borrow::Borrow;
 use std::convert::TryInto;
 
 #[derive(Copy,Clone, Debug)]
@@ -172,6 +173,9 @@ impl Memory{
 
     pub fn set_device(&mut self, index: usize, new_device: Box<dyn Device>){
         self.devices[index] = new_device;
+    }
+    pub fn get_device(&self, index: usize) -> &Box<dyn Device>{
+        return &self.devices[index];
     }
 
 
