@@ -150,7 +150,6 @@ impl Memory{
                 return 0xCAFEBEEDEADBEEFu64.to_le_bytes()[..num_bytes].to_vec();
             }
         }
-        }
     }
 
     pub fn set_bytes(&mut self, address: usize, num_bytes: usize, bytes: Vec<u8>) {
