@@ -6,9 +6,9 @@ use crate::memory;
 
 const DUMP_REGISTERS: bool = false;
 pub struct Processor{
-    registers: [u64; 32],
-    program_counter: u64,
-    memory: memory::Memory
+    pub registers: [u64; 32],
+    pub program_counter: u64,
+    pub memory: memory::Memory
 }
 
 pub enum ProcesserResult{
