@@ -37,8 +37,13 @@ impl Processor{
         // println!("stack: {:X?}", memory);
 
     }
-    fn get_bytes(&self, address: usize, num_bytes: usize) -> Vec<u8> {
-        return self.memory.get_bytes(address, num_bytes)
+    pub fn get_bytes(&self, address: usize, num_bytes: usize) -> Vec<u8> {
+        let mut output = vec![0;num_bytes];
+        let new_bytes = self.memory.get_bytes(address, num_bytes);
+        for i in 0..new_bytes.len(){
+            output[i] = new_bytes[i];
+        }
+        return output;
     }
     fn set_bytes(&mut self, address: usize, num_bytes: usize, bytes: Vec<u8>){
         self.memory.set_bytes(address,num_bytes,bytes);
