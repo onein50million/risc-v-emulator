@@ -1,5 +1,4 @@
 use std::convert::TryInto;
-use std::usize::MAX;
 
 #[derive(Copy,Clone, Debug)]
 enum SegmentTypes {
@@ -42,7 +41,12 @@ fn return_segment(address: usize) -> SegmentTypes{
 const fn calculate_start(index: usize) -> usize{
     let mut sum = 0;
     let mut i = 0;
-    while i<index{
+    let new_index = if index < 1 {
+        0
+    }else{
+        index - 1
+    };
+    while i<new_index{
         sum += SEGMENTS[i].size;
         i+=1;
     }
@@ -135,7 +139,7 @@ impl Memory{
         match return_segment(address){
             SegmentTypes::Ram => {
                 println!("RAM");
-                return self.ram[address..][..num_bytes].to_vec();
+                return self.ram[address..][..num_bytes.min(SEGMENT_STARTS[1])].to_vec();
             }
             SegmentTypes::ConnectedDevices => {
                 println!("CONNECTEDDEVICES");
@@ -143,11 +147,12 @@ impl Memory{
             }
             SegmentTypes::Device => {
                 println!("DEVICE");
-                return self.devices[address/MAX_DEVICE_SIZE].get_bytes(address%MAX_DEVICE_SIZE, num_bytes)
+                let local_address = address - SEGMENT_STARTS[2];
+                return self.devices[local_address/MAX_DEVICE_SIZE].get_bytes(local_address%MAX_DEVICE_SIZE, num_bytes)
             }
             SegmentTypes::Unknown => {
                 println!("UNKNOWN");
-                return 0xCAFEBEEDEADBEEFu64.to_le_bytes()[..num_bytes].to_vec();
+                return 0xCafeDeadBeefu64.to_le_bytes()[..num_bytes].to_vec();
             }
         }
     }
