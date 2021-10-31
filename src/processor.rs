@@ -5,19 +5,19 @@ use crate::format;
 use crate::memory;
 
 const DUMP_REGISTERS: bool = false;
-pub(crate) struct Processor{
+pub struct Processor{
     registers: [u64; 32],
     program_counter: u64,
     memory: memory::Memory
 }
 
-pub (crate) enum ProcesserResult{
+pub enum ProcesserResult{
     Break,
     Continue
 }
 
 impl Processor{
-    pub(crate) fn new(code: Vec<u8>) -> Self{
+    pub fn new(code: Vec<u8>) -> Self{
         let mut processor = Self{
             registers: [0x0;32],
             program_counter: 0,
@@ -69,7 +69,7 @@ impl Processor{
     }
 
 
-    pub(crate) fn process(&mut self) -> ProcesserResult {
+    pub fn process(&mut self) -> ProcesserResult {
         let mut program_counter_handled = false;
         if DUMP_REGISTERS{
             self.dump_registers();

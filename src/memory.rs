@@ -78,13 +78,13 @@ impl Device for Display{
     }
 }
 
-pub(crate) struct Memory {
+pub struct Memory {
     ram: Vec<u8>,
     devices: Vec<Box<dyn Device>>,
 }
 
 impl Memory{
-    pub(crate) fn new(initial_bytes: Vec<u8>)-> Self{
+    pub fn new(initial_bytes: Vec<u8>)-> Self{
 
         const RAM_INDEX: usize = 0; //TODO: make this smarter
 
@@ -98,11 +98,11 @@ impl Memory{
         return memory;
     }
 
-    pub(crate) fn get_ram_length(&self) -> usize{
+    pub fn get_ram_length(&self) -> usize{
         return self.ram.len();
     }
 
-    pub(crate) fn get_bytes(&self, address: usize, num_bytes: usize) -> Vec<u8> {
+    pub fn get_bytes(&self, address: usize, num_bytes: usize) -> Vec<u8> {
         // println!("segment: {:?}", return_segment(address));
         // println!("address: {:}", address);
         match return_segment(address){
@@ -121,7 +121,7 @@ impl Memory{
         }
     }
 
-    pub(crate) fn set_bytes(&mut self, address: usize, num_bytes: usize, bytes: Vec<u8>) {
+    pub fn set_bytes(&mut self, address: usize, num_bytes: usize, bytes: Vec<u8>) {
         match return_segment(address) {
             SegmentTypes::Ram => {
                 for i in 0..num_bytes {
