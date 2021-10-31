@@ -1,4 +1,5 @@
 use std::convert::TryInto;
+use std::usize::MAX;
 
 #[derive(Copy,Clone, Debug)]
 enum SegmentTypes {
@@ -60,20 +61,38 @@ pub trait Device{
     fn set_bytes(&mut self, address: usize, num_bytes: usize, bytes: Vec<u8>);
 }
 
-struct Display{
-    state: [u64;64],
+// struct Display{
+//     state: [u64;64],
+// }
+// impl Device for Display{
+//     fn get_type(&self) -> u64 {
+//         return 1;
+//     }
+//
+//     fn get_bytes(&self, address: usize, num_bytes: usize) -> Vec<u8> {
+//         return self.state[address/8].to_le_bytes()[(address%8)..][..num_bytes].to_vec();
+//     }
+//
+//     fn set_bytes(&mut self, address: usize, num_bytes: usize, bytes: Vec<u8>) {
+//         self.state[address/8] = u64::from_le_bytes(bytes[..num_bytes].try_into().unwrap());
+//     }
+// }
+
+#[derive(Copy, Clone)]
+struct PlaceholderDevice{
 }
-impl Device for Display{
+impl Device for PlaceholderDevice{
     fn get_type(&self) -> u64 {
-        return 1;
+        return 0;
     }
 
     fn get_bytes(&self, address: usize, num_bytes: usize) -> Vec<u8> {
-        return self.state[address/8].to_le_bytes()[(address%8)..][..num_bytes].to_vec();
+        println!("Get bytes called on placeholder device");
+        return std::iter::repeat(69).take(num_bytes).collect();
     }
 
-    fn set_bytes(&mut self, address: usize, num_bytes: usize, bytes: Vec<u8>) {
-        self.state[address/8] = u64::from_le_bytes(bytes[..num_bytes].try_into().unwrap());
+    fn set_bytes(&mut self, _address: usize, _num_bytes: usize, _bytes: Vec<u8>) {
+        println!("Set bytes called on placeholder device")
     }
 }
 
@@ -90,9 +109,18 @@ impl Memory{
         assert!(matches!(SEGMENTS[RAM_INDEX].segment_type,SegmentTypes::Ram));
         let mut ram = vec![0; SEGMENTS[RAM_INDEX].size];
         ram.splice(0..initial_bytes.len(), initial_bytes);
+
+        let mut devices = Vec::with_capacity(MAX_DEVICES);
+
+        for _i in 0..MAX_DEVICES{
+            devices.push(
+                Box::new(PlaceholderDevice{}) as Box<dyn Device>
+            )
+        }
+
         let memory = Self{
             ram,
-            devices: vec![]
+            devices
         };
         return memory;
     }
