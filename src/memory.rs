@@ -134,17 +134,22 @@ impl Memory{
         // println!("address: {:}", address);
         match return_segment(address){
             SegmentTypes::Ram => {
+                println!("RAM");
                 return self.ram[address..][..num_bytes].to_vec();
             }
             SegmentTypes::ConnectedDevices => {
+                println!("CONNECTEDDEVICES");
                 return self.devices[address/MAX_DEVICE_SIZE].get_type().to_le_bytes()[..num_bytes].to_vec();
             }
             SegmentTypes::Device => {
+                println!("DEVICE");
                 return self.devices[address/MAX_DEVICE_SIZE].get_bytes(address%MAX_DEVICE_SIZE, num_bytes)
             }
             SegmentTypes::Unknown => {
+                println!("UNKNOWN");
                 return 0xCAFEBEEDEADBEEFu64.to_le_bytes()[..num_bytes].to_vec();
             }
+        }
         }
     }
 
